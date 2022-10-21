@@ -17,13 +17,26 @@ ml bedtools
 ml seqtk
 ml alienhunter/1.7
 
+#SETTING UP LOGGER FILE
+echo "" > run_log.txt
+
+echo "PROGRAM BEGINS"
+echo "PROGRAM BEGINS" >> run_log.txt
+
+#CHANGE TO PARENT DIRECTORY
+cd ..
+
 ##list1 is a list of the name of your genomes
-for x in `cat xp_example.txt`
+cat ./xp_example.txt | while read x
 do
 
-#cambio
+echo "ITERATION $x"
+echo "ITERATION $x" >> run_log.txt
 
-###concatenate contigs
+#for x in `$(cat ../xp_example.txt)`
+#do
+
+##concatenate contigs
 #ls $x".fasta"
 #sed 's/^>.*$/NNN/g' $x".fasta" | awk 'BEGIN { ORS=""; print ">contigs\n" } { print }' > $x"cat_contigs.fasta"
 
@@ -38,11 +51,21 @@ do
 ##grep the genes overlappimg the islands
 
 grep mis $x".sco" | sed 's/\../\t/g' | sed 's/FT/contigs/g' |sed 's/\misc_feature/\t/g' >  $x"island.bed"
+ 
+
 cat /blue/goss/marianaherreraco/alien_hunter-1.7/Concat_annot_ah/examplejun23/"prokka_"$x"/$x".gff" | grep -v '#' | cut -f 1,4,5 > /blue/goss/marianaherreraco/alien_hunter-1.7/Concat_annot_ah/examplejun23/"prokka_"$x"/$x"_1.gff"
+
 **cat jk10-02island.bed |sed 's/ //g' > experimento.bed
 bedtools intersect -a "prokka_"$x"/$x"_1.gff" -b $x"island.bed" > $x"_islanders.gff"
 **bedtools intersect -a "prokka_"$x"/$x"_1.gff" -b experimento.bed" > $x"_islanders.gff"
 **sort jk10-02_islanders.gff | uniq  > jk10-02_islandersuniq.gff
 cut -f 9 $x"_islanders.gff" | cut -f 1 -d ";" > $x"_islanders_ID.tab"
-seqtk subseq  "prokka_"$x"/"$x".faa"   $x"_islanders_ID.tab" > $x"_islanders_ID.faa"
+seqtk subseq  "prokka_"$x"/"$x".faa"   $x"_islanders_ID.tab" > $x"_islanders_ID.faa""
+
+echo "ITERATION END FOR $x"
+echo "ITERATION END FOR $x" >> run_log.txt
+
 done
+
+echo "PROGRAM FINISHED"
+echo "PROGRAM FINISHED :)" >> run_log.txt
