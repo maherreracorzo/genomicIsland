@@ -21,7 +21,6 @@ ml alienhunter/1.7
 for x in `cat xp_example.txt`
 do
 
-##cambio
 ###concatenate contigs
 #ls $x".fasta"
 #sed 's/^>.*$/NNN/g' $x".fasta" | awk 'BEGIN { ORS=""; print ">contigs\n" } { print }' > $x"cat_contigs.fasta"
